@@ -5,7 +5,11 @@
 
 import streamlit as st
 import pandas as pd
-import plotly.express as px
+import plotly.express as px 
+import plotly.graph_objects as go
+from pathlib import Path
+from datetime import datetime, date
+# Removido componente externo não utilizado
 
 # -------------------------
 # 🎨 Configuração da página e tema
@@ -66,8 +70,6 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-
-
 st.title("🩺 Painel de Consultas Médicas")
 st.write("Visualize o desempenho de consultas, faturamento e especialidades de forma interativa e intuitiva.")
 
@@ -90,12 +92,36 @@ st.sidebar.header("🎚️ Filtros")
 min_date = df["dataconsulta"].min().date()
 max_date = df["dataconsulta"].max().date()
 
-# Intervalo de datas
-data_range = st.sidebar.date_input("Período", [min_date, max_date])
-if len(data_range) == 2:
-    data_inicial, data_final = data_range
-else:
+# Seleção por calendário (mais intuitivo). O formato exibido segue o locale do navegador.
+# 📅 Forçar formato brasileiro (DD/MM/AAAA)
+# O parâmetro format="DD/MM/YYYY" foi adicionado para exibir corretamente no Streamlit
+data_range = st.sidebar.date_input(
+    "Período (DD/MM/AAAA)",
+    value=(min_date, max_date),
+    min_value=min_date,
+    max_value=max_date,
+    format="DD/MM/YYYY"
+)
+
+# Garantir que sempre tenha dois valores e tratar fim vazio
+if data_range is None:
     data_inicial, data_final = min_date, max_date
+elif isinstance(data_range, (list, tuple)):
+    if len(data_range) == 2 and all(d is not None for d in data_range):
+        data_inicial, data_final = data_range
+    elif len(data_range) >= 1 and data_range[0] is not None:
+        data_inicial = data_range[0]
+        data_final = data_range[0]
+    else:
+        data_inicial, data_final = min_date, max_date
+else:
+    data_inicial = data_range
+    data_final = data_range
+
+# Resumo do período no padrão brasileiro
+st.sidebar.info(
+    f"Período selecionado: {pd.to_datetime(data_inicial).strftime('%d/%m/%Y')} — {pd.to_datetime(data_final).strftime('%d/%m/%Y')}"
+)
 
 # Multiselects
 unidades = st.sidebar.multiselect("Unidades", df["unidade"].unique(), default=list(df["unidade"].unique()))
@@ -118,6 +144,10 @@ if df_filtrado.empty:
     st.warning("Nenhum dado encontrado para os filtros selecionados. Ajuste os parâmetros e tente novamente.")
     st.stop()
 
+# Versões para exibição/exportação com data formatada
+df_view = df_filtrado.copy()
+df_view["dataconsulta"] = df_view["dataconsulta"].dt.strftime("%d/%m/%Y")
+
 # -------------------------
 # 📈 Métricas principais
 # -------------------------
@@ -134,10 +164,15 @@ st.divider()
 csv = df_filtrado.to_csv(index=False).encode("utf-8")
 st.download_button(
     label="💾 Baixar dados filtrados (CSV)",
-    data=csv,
+    data=df_view.to_csv(index=False).encode("utf-8"),
     file_name="consultas_filtradas.csv",
     mime="text/csv"
 )
+
+# Exibir tabela opcional com datas no padrão brasileiro
+if st.sidebar.checkbox("Mostrar dados filtrados (DD/MM/AAAA)", value=False):
+    st.subheader("📄 Dados filtrados")
+    st.dataframe(df_view, width='stretch')
 
 st.divider()
 
@@ -214,6 +249,8 @@ fig4 = px.line(
     title="📆 Evolução de Consultas ao Longo do Tempo",
     color_discrete_sequence=["#0099cc"]
 )
+fig4.update_xaxes(tickformat="%d/%m/%Y")
+fig4.update_traces(hovertemplate="Data: %{x|%d/%m/%Y}<br>Total: %{y}")
 st.plotly_chart(fig4, use_container_width=True)
 
 # 5️⃣ Relação entre Valor e Retornos
