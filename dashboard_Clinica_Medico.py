@@ -5,7 +5,7 @@
 
 import streamlit as st
 import pandas as pd
-import plotly.express as px 
+import plotly.express as px
 import plotly.graph_objects as go
 from pathlib import Path
 from datetime import datetime, date
@@ -23,52 +23,53 @@ st.set_page_config(
 
 # Tema de cores suaves
 # 🌙 Estilo personalizado para modo escuro
-st.markdown(
-    """
-    <style>
-    /* Fundo geral */
-    .stApp {
-        background-color: #0e1117;
-        color: #fafafa;
-    }
+st.markdown("""
+<style>
+/* Campos de seleção e entrada de data no tema escuro */
+div[data-baseweb="select"] > div {
+    background-color: #1e1e1e !important;
+    color: #fafafa !important;
+    border-radius: 8px;
+    border: 1px solid #444 !important;
+}
 
-    /* Títulos e textos */
-    h1, h2, h3, h4, p, span, div {
-        color: #e8e8e8 !important;
-    }
+/* Itens do menu dropdown */
+ul[data-baseweb="menu"] {
+    background-color: #1e1e1e !important;
+    color: #fafafa !important;
+}
 
-    /* Container dos cards de métricas */
-    div[data-testid="stMetric"] {
-        background-color: #1e1e1e;
-        border-radius: 15px;
-        padding: 20px;
-        text-align: center;              /* ✅ Centraliza o conteúdo */
-        box-shadow: 0 0 10px rgba(0, 255, 127, 0.2);
-        display: flex;
-        flex-direction: column;
-        align-items: center;             /* ✅ Centraliza horizontalmente */
-        justify-content: center;         /* ✅ Centraliza verticalmente */
-        height: 100%;
-    }
+/* Itens dentro do menu */
+li[data-baseweb="option"] {
+    background-color: #1e1e1e !important;
+    color: #fafafa !important;
+}
 
-    /* Rótulo (título pequeno) */
-    [data-testid="stMetricLabel"] {
-        color: #d3d3d3 !important;
-        text-align: center;              /* ✅ Centraliza o texto do rótulo */
-        font-weight: 600;
-    }
+/* Hover dos itens */
+li[data-baseweb="option"]:hover {
+    background-color: #333 !important;
+}
 
-    /* Valor numérico */
-    [data-testid="stMetricValue"] {
-        color: #90EE90 !important;       /* Verde suave */
-        text-align: center;              /* ✅ Centraliza valor */
-        font-size: 28px;
-        font-weight: bold;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
+/* Caixa do calendário */
+div[data-baseweb="datepicker"] {
+    background-color: #1e1e1e !important;
+    color: #fafafa !important;
+}
+
+/* Campo de texto do período */
+input[type="text"], input[type="date"] {
+    background-color: #1e1e1e !important;
+    color: #fafafa !important;
+    border: 1px solid #444 !important;
+}
+
+/* Textos dos labels e placeholders */
+::placeholder {
+    color: #ccc !important;
+    opacity: 0.7 !important;
+}
+</style>
+""", unsafe_allow_html=True)
 
 st.title("🩺 Painel de Consultas Médicas")
 st.write("Visualize o desempenho de consultas, faturamento e especialidades de forma interativa e intuitiva.")
