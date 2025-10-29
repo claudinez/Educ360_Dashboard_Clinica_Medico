@@ -25,7 +25,9 @@ st.set_page_config(
 # 🌙 Estilo personalizado para modo escuro
 st.markdown("""
 <style>
-/* Campos de seleção e entrada de data no tema escuro */
+/* ===========================================
+   🎨 AJUSTE DE CAMPOS DE SELEÇÃO E DATA
+   =========================================== */
 div[data-baseweb="select"] > div {
     background-color: #1e1e1e !important;
     color: #fafafa !important;
@@ -33,43 +35,78 @@ div[data-baseweb="select"] > div {
     border: 1px solid #444 !important;
 }
 
-/* Itens do menu dropdown */
 ul[data-baseweb="menu"] {
     background-color: #1e1e1e !important;
     color: #fafafa !important;
 }
 
-/* Itens dentro do menu */
 li[data-baseweb="option"] {
     background-color: #1e1e1e !important;
     color: #fafafa !important;
 }
 
-/* Hover dos itens */
 li[data-baseweb="option"]:hover {
     background-color: #333 !important;
 }
 
-/* Caixa do calendário */
 div[data-baseweb="datepicker"] {
     background-color: #1e1e1e !important;
     color: #fafafa !important;
 }
 
-/* Campo de texto do período */
 input[type="text"], input[type="date"] {
     background-color: #1e1e1e !important;
     color: #fafafa !important;
     border: 1px solid #444 !important;
 }
 
-/* Textos dos labels e placeholders */
 ::placeholder {
     color: #ccc !important;
     opacity: 0.7 !important;
 }
+
+/* ===========================================
+   💳 ESTILO DOS CARDS DE MÉTRICAS
+   =========================================== */
+div[data-testid="stMetric"] {
+    background: linear-gradient(145deg, #1e1e1e, #151515);
+    border: 1px solid #3a3a3a;
+    border-radius: 16px;
+    padding: 25px;
+    box-shadow: 0 4px 20px rgba(0, 255, 127, 0.1);
+    text-align: center;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Efeito hover */
+div[data-testid="stMetric"]:hover {
+    box-shadow: 0 0 25px rgba(0, 255, 127, 0.3);
+    transform: translateY(-4px);
+}
+
+/* Rótulo das métricas */
+[data-testid="stMetricLabel"] {
+    color: #d3d3d3 !important;
+    font-weight: 600;
+    text-align: center;
+    font-size: 16px;
+    margin-bottom: 8px;
+}
+
+/* Valor principal */
+[data-testid="stMetricValue"] {
+    color: #90EE90 !important;
+    font-size: 30px;
+    font-weight: bold;
+}
+
+/* Espaçamento entre os 3 cards */
+section[data-testid="stHorizontalBlock"] {
+    gap: 25px !important;
+}
 </style>
 """, unsafe_allow_html=True)
+
 
 st.title("🩺 Painel de Consultas Médicas")
 st.write("Visualize o desempenho de consultas, faturamento e especialidades de forma interativa e intuitiva.")
